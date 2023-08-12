@@ -21,3 +21,24 @@ train_frame.drop(['Location'], axis = 1, inplace=True)
 #turn sentiments into numbers, to allow the model to predict it
 train_frame.Sentiment = train_frame.Sentiment.map({'Positive':1, 'Negative':2, 'Neutral':0, 'Irrelevant':0})
 train_frame.head()
+#data processing 1/2: remove irrelevant information (punctuation), turn everything to lowercase
+import string
+
+def removePunctuation(message):
+  # for char in string.punctuation:
+  message = message.translate(str.maketrans('', '', string.punctuation))
+  return message
+
+train_frame['Message'] = train_frame['Message'].str.lower()
+train_frame.head()
+
+# data processing 2/2: install nltk, a library that contains stop words- irrelevant words to ML like "and", "or", etc.
+!pip install nltk
+import nltk.corpus
+from nltk.corpus import stopwords
+
+train_frame['Message']=train_frame['Message'].fillna("")
+nltk.download('stopwords')
+
+stop_words = stopwords.words('english')
+train_frame['title_nostop'] = train_frame['Message'].apply(lambda x: ' '.join([word for word in x.split() if word not in stop_words]))
