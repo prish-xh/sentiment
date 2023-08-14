@@ -42,3 +42,20 @@ nltk.download('stopwords')
 
 stop_words = stopwords.words('english')
 train_frame['title_nostop'] = train_frame['Message'].apply(lambda x: ' '.join([word for word in x.split() if word not in stop_words]))
+
+#change the dataframe so it only includes relevant information
+
+train_frame.drop(['Message', 'x'], axis = 1, inplace=True)
+
+train_frame.columns =['sentiment', 'message']
+
+train_frame.shape
+
+#split data into 80/20 train/test
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(train_frame.message, train_frame.sentiment, test_size = 0.2, random_state = 1)
+y_train = y_train.astype('int')
+y_test = y_test.astype('int')
+print(X_train.shape)
+print(X_test.shape)
