@@ -59,3 +59,21 @@ y_train = y_train.astype('int')
 y_test = y_test.astype('int')
 print(X_train.shape)
 print(X_test.shape)
+
+#import count vectorizer (similar to bag of words technique) and transforms data into something that the model can understand
+
+from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer(analyzer='word', token_pattern=r'\b\w+\b')
+vectorizer.fit(list(X_train) + list(X_test))
+x_train_vectorized = vectorizer.transform(X_train)
+x_test_vectorized = vectorizer.transform(X_test)
+
+#create and train a logistic regression model
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression(max_iter = 1000)
+model.fit(x_train_vectorized, y_train)
+
+#test the model with the testing data and getting the accuracy from it
+from sklearn.metrics import accuracy_score
+preds = model.predict(x_test_vectorized)
+print(accuracy_score(list(y_test), preds))
